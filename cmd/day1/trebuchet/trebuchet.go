@@ -42,44 +42,22 @@ func (wm WordConverter) Matches(r rune) (bool, string) {
 type WordMatcher struct {
 	context string
 	words   []string
-	reverse bool
 }
 
 func NewWordMatcher(words []string) Matcher {
-	wm := WordMatcher{"", words, false}
+	wm := WordMatcher{"", words}
 	return &wm
-}
-
-func NewReverseWordMatcher(words []string) Matcher {
-	wm := WordMatcher{"", words, true}
-	return &wm
-
 }
 
 func (wm *WordMatcher) Matches(r rune) (bool, string) {
-	if unicode.IsDigit(r) {
-		wm.context = ""
-		return false, ""
-	}
-
-	if wm.reverse {
-		wm.context = string(r) + wm.context
-	} else {
-		wm.context = wm.context + string(r)
-	}
+	wm.context = wm.context + string(r)
 
 	for _, w := range wm.words {
-		if w == wm.context {
-			match := wm.context
+		if strings.Contains(wm.context, w) {
 			wm.context = ""
-			return true, match
-		}
-
-		if strings.Contains(w, wm.context) {
-			return false, ""
+			return true, w
 		}
 	}
-	wm.context = ""
 	return false, ""
 }
 
@@ -136,8 +114,6 @@ func Last(str string, matcher Matcher) (bool, string) {
 }
 
 func ConvertStrToInt(str string) int {
-	println("converting:")
-	println(str)
 	i, err := strconv.Atoi(str)
 	if err != nil {
 		log.Printf("%v", err)

@@ -39,28 +39,34 @@ func partTwo() {
 	}
 	words := structures.Keys(wordsMap)
 
-	ins := []string{
-		"threexyzthreet",
+	reverseWordsMap := map[string]string{
+		"eno":   "1",
+		"owt":   "2",
+		"eerht": "3",
+		"ruof":  "4",
+		"evif":  "5",
+		"xis":   "6",
+		"neves": "7",
+		"thgie": "8",
+		"enin":  "9",
 	}
+	reverseWords := structures.Keys(reverseWordsMap)
 
 	dm := &trebuchet.DigitMatcher{}
 	wm := trebuchet.NewWordMatcher(words)
 	wc := trebuchet.NewWordConverter(wordsMap, wm)
 	fwodm := trebuchet.NewMultiMatcher(wc, dm)
 
-	rwm := trebuchet.NewReverseWordMatcher(words)
-	rwc := trebuchet.NewWordConverter(wordsMap, rwm)
+	rwm := trebuchet.NewWordMatcher(reverseWords)
+	rwc := trebuchet.NewWordConverter(reverseWordsMap, rwm)
 	rfwodm := trebuchet.NewMultiMatcher(rwc, dm)
 
 	results := []int{}
-	for _, in := range ins {
+	for _, in := range INPUT {
 		_, f := trebuchet.First(in, fwodm)
 		_, l := trebuchet.Last(in, rfwodm)
 
 		combined := string(f) + string(l)
-
-		println("combined")
-		println(combined)
 		results = append(results, trebuchet.ConvertStrToInt(combined))
 	}
 
