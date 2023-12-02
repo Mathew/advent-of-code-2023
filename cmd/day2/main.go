@@ -4,6 +4,7 @@ import "log"
 
 func main() {
 	partOne()
+	partTwo()
 }
 
 type Game struct {
@@ -44,4 +45,26 @@ func partOne() {
 	log.Printf("Day two, part one: %v", possibleGames)
 }
 
-func partTwo() {}
+func partTwo() {
+	possibleGames := 0
+
+	for _, game := range INPUT {
+		maxCubes := map[string]int{
+			"red":   0,
+			"blue":  0,
+			"green": 0,
+		}
+
+		for _, round := range game.Rounds {
+			for colour, number := range round {
+				if number > maxCubes[colour] {
+					maxCubes[colour] = number
+				}
+			}
+		}
+
+		possibleGames += maxCubes["red"] * maxCubes["green"] * maxCubes["blue"]
+	}
+
+	log.Printf("Day two, part two: %v", possibleGames)
+}
